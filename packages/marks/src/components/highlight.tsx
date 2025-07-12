@@ -45,7 +45,6 @@ export const CustomHighlight = createYooptaMark<YooptaMarkProps<'highlight', Lea
 
     return (
       <mark
-        {...props.attributes}
         style={style}
         className={customClassName || 'yoopta-mark-highlight cursor-pointer hover:opacity-80'}
         data-id={dataId}
@@ -56,42 +55,5 @@ export const CustomHighlight = createYooptaMark<YooptaMarkProps<'highlight', Lea
         {props.children}
       </mark>
     );
-  },
-
-  deserialize: (el) => {
-    if (el.tagName.toLowerCase() === 'mark') {
-      console.log('Deserializing mark element:', el);
-
-      const dataId = el.getAttribute('data-id');
-      const dataType = el.getAttribute('data-type');
-      const dataOriginal = el.getAttribute('data-original');
-      const className = el.getAttribute('class');
-
-      const color = el.style.color || undefined;
-      const backgroundColor = el.style.backgroundColor || undefined;
-
-      console.log('Extracted attributes:', {
-        dataId,
-        dataType,
-        dataOriginal,
-        className,
-        color,
-        backgroundColor,
-      });
-
-      return {
-        type: 'highlight',
-        data: {
-          color,
-          backgroundColor,
-          'data-type': dataType,
-          'data-id': dataId,
-          'data-original': dataOriginal,
-          className,
-        },
-      };
-    }
-
-    return null;
   },
 });
