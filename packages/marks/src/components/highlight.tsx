@@ -1,19 +1,29 @@
 import { YooptaMarkProps, createYooptaMark } from '@yoopta/editor';
 
 export type LeafColorProps = {
-  color: string;
-  backgroundColor: string;
+  color?: string;
+  backgroundColor?: string;
   backgroundImage?: string;
   backgroundClip?: string;
   webkitTextFillColor?: string;
+  'data-type'?: string;
+  'data-id'?: string;
+  'data-original'?: string;
+  className?: string;
 };
 
-export const Highlight = createYooptaMark<YooptaMarkProps<'highlight', LeafColorProps>>({
+export const CustomHighlight = createYooptaMark<YooptaMarkProps<'highlight', LeafColorProps>>({
   type: 'highlight',
+
   render: (props) => {
     const highlight = props.leaf?.highlight;
 
-    const style = {
+    const dataType = highlight?.['data-type'];
+    const dataId = highlight?.['data-id'];
+    const dataOriginal = highlight?.['data-original'];
+    const customClassName = highlight?.className;
+
+    let style: React.CSSProperties = {
       color: highlight?.color,
       backgroundColor: highlight?.backgroundColor,
       backgroundImage: highlight?.backgroundImage,
@@ -21,10 +31,67 @@ export const Highlight = createYooptaMark<YooptaMarkProps<'highlight', LeafColor
       backgroundClip: highlight?.backgroundClip,
     };
 
+    if (dataType === 'greenHighlight') {
+      style.backgroundColor = '#bbf7d0';
+    } else if (dataType === 'blueHighlight') {
+      style.backgroundColor = '#bfdbfe';
+    } else if (!style.backgroundColor) {
+      style.backgroundColor = '#fef3c7';
+    }
+
+    const handleClick = () => {
+      console.log('🟨 Clicked highlight with id:', dataId);
+    };
+
     return (
-      <span style={style} className="yoopta-mark-highlight">
+      <mark
+        {...props.attributes}
+        style={style}
+        className={customClassName || 'yoopta-mark-highlight cursor-pointer hover:opacity-80'}
+        data-id={dataId}
+        data-type={dataType}
+        data-original={dataOriginal}
+        onClick={handleClick}
+      >
         {props.children}
-      </span>
+      </mark>
     );
+  },
+
+  deserialize: (el) => {
+    if (el.tagName.toLowerCase() === 'mark') {
+      console.log('Deserializing mark element:', el);
+
+      const dataId = el.getAttribute('data-id');
+      const dataType = el.getAttribute('data-type');
+      const dataOriginal = el.getAttribute('data-original');
+      const className = el.getAttribute('class');
+
+      const color = el.style.color || undefined;
+      const backgroundColor = el.style.backgroundColor || undefined;
+
+      console.log('Extracted attributes:', {
+        dataId,
+        dataType,
+        dataOriginal,
+        className,
+        color,
+        backgroundColor,
+      });
+
+      return {
+        type: 'highlight',
+        data: {
+          color,
+          backgroundColor,
+          'data-type': dataType,
+          'data-id': dataId,
+          'data-original': dataOriginal,
+          className,
+        },
+      };
+    }
+
+    return null;
   },
 });
