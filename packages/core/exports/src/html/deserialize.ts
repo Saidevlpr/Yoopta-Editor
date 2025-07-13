@@ -11,6 +11,7 @@ export function deserializeHTML(editor: YooEditor, htmlString: string): YooptaCo
     blockData.meta.order = i;
     value[block.id] = blockData;
   });
+  console.log(value,"blockValue")
 
   return value;
 }

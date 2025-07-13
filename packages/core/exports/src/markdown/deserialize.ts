@@ -28,5 +28,6 @@ export function deserializeMarkdown(editor: YooEditor, markdown: string): Yoopta
   };
   marked.use({ extensions: [imageExtension] });
   const html = marked.parse(markdown, { gfm: true, breaks: true, pedantic: false }) as string;
+  console.log(html,"htmlYoota")
   return deserializeHTML(editor, html);
 }
