@@ -39,8 +39,8 @@ export const CustomHighlight = createYooptaMark<YooptaMarkProps<'highlight', Lea
       style.backgroundColor = '#fef3c7';
     }
 
-    const handleClick = () => {
-      console.log('🟨 Clicked highlight with id:', dataId);
+    const handleClick = (e) => {
+      console.log('🟨 Clicked highlight with id:', dataId,e,props);
     };
 
     return (

@@ -14,7 +14,7 @@
 
 # production
 /build
-/dist
+
 
 # misc
 .DS_Store
@@ -48,7 +48,7 @@ yarn-error.log*
 .idea/
 *.tsbuildinfo
 build/
-dist/
+
 # lib/
 node_modules/
 packages/*/yarn.lock
